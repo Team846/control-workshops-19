@@ -1,0 +1,3 @@
+rootProject.name = 'control-workshops-19'
+include 'uoms'
+include 'uoms:jvm'
