@@ -24,28 +24,29 @@ class Lift {
         private val openloopRamp = 0.Second
         private val closedloopRamp = 0.Second
         private val peakOutputForward = 12.Volt
-        private val nominalOutputForward = 1.Volt
-        private val nominalOutputReverse = -nominalOutputForward
         private val peakOutputReverse = -peakOutputForward
+        private val nominalOutputForward = 2.25.Volt
+        private val nominalOutputReverse = -nominalOutputForward
         private val voltageCompSaturation = 12.Volt
         private val continuousCurrentLimit = 20.Ampere
         private val peakCurrentLimit = 35.Ampere
         private val peakCurrentDuration = 0.5.Second
 
-        private val min = 0.Inch to 156
-        private val max = 67.Inch to 756
-        private val zeroOffset = 17.42.Inch
+        private val min = 0.Inch to 189
+        private val max = 65.5.Inch to 792
+        private val zeroOffset = 20.529.Inch
     }
 
     private val talon = TalonSRX(ESC_CAN_ID).apply {
         configFactoryDefault(TIMEOUT)
         setNeutralMode(NeutralMode.Brake)
-        configNeutralDeadband(0.001, TIMEOUT)
         enableVoltageCompensation(true)
         enableCurrentLimit(true)
         setControlFramePeriod(Control_3_General, syncThreshold.milli(Second).toInt())
         inverted = INVERT
         setSensorPhase(INVERT_SENSOR)
+
+        configNeutralDeadband(0.001, TIMEOUT)
 
         configForwardSoftLimitEnable(true, TIMEOUT)
         configReverseSoftLimitEnable(true, TIMEOUT)
