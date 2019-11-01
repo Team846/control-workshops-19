@@ -1,4 +1,4 @@
-package com.lynbrookrobotics.workshops
+package com.lynbrookrobotics.workshops.donottouch
 
 import com.ctre.phoenix.motorcontrol.ControlFrame
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
@@ -30,8 +30,8 @@ class LiftHardware {
         private val peakCurrentLimit = 35.Ampere
         private val peakCurrentDuration = 0.5.Second
 
-        val min = 0.Inch to 189
-        val max = 65.5.Inch to 792
+        val min = 9.9.Inch to 280
+        val max = 54.4.Inch to 690
         val zeroOffset = 20.529.Inch
     }
 
