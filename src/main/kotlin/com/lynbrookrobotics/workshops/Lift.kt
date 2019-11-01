@@ -1,88 +1,43 @@
 package com.lynbrookrobotics.workshops
 
-import com.ctre.phoenix.motorcontrol.ControlFrame.Control_3_General
 import com.ctre.phoenix.motorcontrol.ControlMode
-import com.ctre.phoenix.motorcontrol.FeedbackDevice
-import com.ctre.phoenix.motorcontrol.NeutralMode
-import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod.Period_5Ms
-import com.ctre.phoenix.motorcontrol.can.TalonSRX
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration
-import info.kunalsheth.units.generated.*
-import info.kunalsheth.units.math.milli
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
+import info.kunalsheth.units.generated.DutyCycle
+import info.kunalsheth.units.generated.Each
+import info.kunalsheth.units.generated.Inch
+import info.kunalsheth.units.generated.Length
 
 class Lift {
 
-    companion object {
-        private const val ESC_CAN_ID = 40
-        private const val IDX = 0
-        private const val INVERT = false
-        private const val INVERT_SENSOR = false
+    private val hardware = LiftHardware()
 
-        private const val TIMEOUT = 2500
-
-        private val syncThreshold = 5.milli(Second)
-        private val openloopRamp = 0.Second
-        private val closedloopRamp = 0.Second
-        private val peakOutputForward = 12.Volt
-        private val peakOutputReverse = -peakOutputForward
-        private val nominalOutputForward = 2.25.Volt
-        private val nominalOutputReverse = -nominalOutputForward
-        private val voltageCompSaturation = 12.Volt
-        private val continuousCurrentLimit = 20.Ampere
-        private val peakCurrentLimit = 35.Ampere
-        private val peakCurrentDuration = 0.5.Second
-
-        private val min = 0.Inch to 189
-        private val max = 65.5.Inch to 792
-        private val zeroOffset = 20.529.Inch
-    }
-
-    private val talon = TalonSRX(ESC_CAN_ID).apply {
-        configFactoryDefault(TIMEOUT)
-        setNeutralMode(NeutralMode.Brake)
-        enableVoltageCompensation(true)
-        enableCurrentLimit(true)
-        setControlFramePeriod(Control_3_General, syncThreshold.milli(Second).toInt())
-        inverted = INVERT
-        setSensorPhase(INVERT_SENSOR)
-
-        configNeutralDeadband(0.001, TIMEOUT)
-
-        configForwardSoftLimitEnable(true, TIMEOUT)
-        configReverseSoftLimitEnable(true, TIMEOUT)
-        configForwardSoftLimitThreshold(max.second, TIMEOUT)
-        configReverseSoftLimitThreshold(min.second, TIMEOUT)
-
-        configOpenloopRamp(openloopRamp.Second, TIMEOUT)
-        configClosedloopRamp(closedloopRamp.Second, TIMEOUT)
-        configPeakOutputForward((peakOutputForward / voltageCompSaturation).Each, TIMEOUT)
-        configPeakOutputReverse((peakOutputReverse / voltageCompSaturation).Each, TIMEOUT)
-        configNominalOutputForward((nominalOutputForward / voltageCompSaturation).Each, TIMEOUT)
-        configNominalOutputReverse((nominalOutputReverse / voltageCompSaturation).Each, TIMEOUT)
-        configVoltageCompSaturation(voltageCompSaturation.Volt, TIMEOUT)
-        configContinuousCurrentLimit(continuousCurrentLimit.Ampere.toInt(), TIMEOUT)
-        configPeakCurrentLimit(peakCurrentLimit.Ampere.toInt(), TIMEOUT)
-        configPeakCurrentDuration(peakCurrentDuration.milli(Second).toInt(), TIMEOUT)
-        configSelectedFeedbackSensor(FeedbackDevice.Analog, IDX, TIMEOUT)
-        configVelocityMeasurementPeriod(Period_5Ms, TIMEOUT)
-        configVelocityMeasurementWindow(4, TIMEOUT)
-
-        val configs = TalonSRXConfiguration().also { getAllConfigs(it, TIMEOUT) }
-        check(configs.reverseSoftLimitThreshold == min.second && configs.forwardSoftLimitThreshold == max.second) {
-            "Soft limits are not set correctly"
-        }
-    }
-
+    /**
+     * Get the current position (height) of the lift
+     */
     val position: Length
         get() {
-            val nativeFeedbackUnits = max.second - min.second
-            val perFeedbackQuantity = max.first - min.first
+            // Converting native sensor units to physical height
+            val nativeFeedbackUnits = LiftHardware.max.second - LiftHardware.min.second
+            val perFeedbackQuantity = LiftHardware.max.first - LiftHardware.min.first
 
-            return (perFeedbackQuantity / nativeFeedbackUnits * talon.getSelectedSensorPosition(IDX)) - zeroOffset
+            return (perFeedbackQuantity / nativeFeedbackUnits * hardware.talon.getSelectedSensorPosition(0)) - LiftHardware.zeroOffset
         }
 
+    /**
+     * Set the current output of the motor from -1.0 to 1.0
+     *
+     * @param value of duty cycle from `-100.Percent` to `100.Percent`
+     */
     fun set(value: DutyCycle) {
-        talon.set(ControlMode.PercentOutput, value.Each)
+        hardware.talon.set(ControlMode.PercentOutput, value.Each)
+    }
+
+    /**
+     * Log the lift's native and real position on smart dashboard
+     */
+    fun log() {
+        SmartDashboard.putNumber("Position Real (Inches)", position.Inch)
+        SmartDashboard.putNumber("Position Native", hardware.talon.getSelectedSensorPosition(0).toDouble())
     }
 
 }

@@ -7,36 +7,33 @@ import edu.wpi.first.wpilibj.Solenoid
 import info.kunalsheth.units.generated.Percent
 
 // BASE TEMPLATE
-fun main(args: Array<String>) = RobotBase.startRobot(::FunkyRobot)
+fun main() = RobotBase.startRobot(::FunkyRobot)
 
 class FunkyRobot : RobotBase() {
 
     override fun startCompetition() {
 
+        // write initialization code here!
+
         val hook = Solenoid(2)
         val lift = Lift()
         val joystick = Joystick(0)
 
-        var counter = 0
-
         HAL.observeUserProgramStarting()
 
         while (true) {
+            // write control code here!
 
-            hook.set(joystick.getRawButton(1))
+            hook.set(joystick.getRawButton(0));
             lift.set(
                     when (joystick.pov) {
-                        0 -> 50.Percent
-                        180 -> -50.Percent
+                        0 -> 20.Percent
+                        180 -> -20.Percent
                         else -> 0.Percent
                     }
             )
 
-            counter = (counter + 1) % 10
-            if (counter == 0) {
-                print(lift.position)
-            }
-
+            lift.log()
             m_ds.waitForData()
         }
     }
