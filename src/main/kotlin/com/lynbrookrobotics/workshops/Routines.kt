@@ -1,18 +1,18 @@
 package com.lynbrookrobotics.workshops
 
-import com.lynbrookrobotics.workshops.donottouch.subsystems.hook.HookComponent
-import com.lynbrookrobotics.workshops.donottouch.subsystems.lift.LiftComponent
-import com.lynbrookrobotics.workshops.donottouch.subsystems.slider.SliderComponent
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Hook
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Lift
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Slider
 import info.kunalsheth.units.generated.DutyCycle
 import info.kunalsheth.units.generated.Inch
 import info.kunalsheth.units.generated.Length
 import info.kunalsheth.units.generated.Percent
 
-suspend fun LiftComponent.set(target: DutyCycle) = startRoutine("Lift Set") {
+suspend fun Lift.set(target: DutyCycle) = startRoutine("Lift Set") {
     controller { target }
 }
 
-suspend fun LiftComponent.set(target: Length) = startRoutine("Lift Set Position") {
+suspend fun Lift.set(target: Length) = startRoutine("Lift Set Position") {
 
     val kP = 10.0
 
@@ -21,10 +21,10 @@ suspend fun LiftComponent.set(target: Length) = startRoutine("Lift Set Position"
     }
 }
 
-suspend fun HookComponent.set(target: Boolean) = startRoutine("Hook Set") {
+suspend fun Hook.set(target: Boolean) = startRoutine("Hook Set") {
     controller { target }
 }
 
-suspend fun SliderComponent.set(target: Boolean) = startRoutine("Hook Slider Set") {
+suspend fun Slider.set(target: Boolean) = startRoutine("Hook Slider Set") {
     controller { target }
 }

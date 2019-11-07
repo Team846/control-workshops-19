@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.workshops.donottouch.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
-import com.lynbrookrobotics.workshops.donottouch.Component
+import com.lynbrookrobotics.workshops.donottouch.util.Component
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import info.kunalsheth.units.generated.*
 

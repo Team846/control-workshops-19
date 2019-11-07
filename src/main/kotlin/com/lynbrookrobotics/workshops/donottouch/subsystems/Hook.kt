@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.workshops.donottouch.subsystems
 
-import com.lynbrookrobotics.workshops.donottouch.Component
+import com.lynbrookrobotics.workshops.donottouch.util.Component
 import edu.wpi.first.wpilibj.Solenoid
 
 class Hook : Component<Hook, Boolean>() {

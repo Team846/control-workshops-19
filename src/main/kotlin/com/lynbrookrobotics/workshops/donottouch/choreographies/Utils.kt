@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.workshops.donottouch.choreographies
 
-import com.lynbrookrobotics.workshops.donottouch.Cancel
-import com.lynbrookrobotics.workshops.donottouch.EventLoop
+import com.lynbrookrobotics.workshops.donottouch.timing.Cancel
+import com.lynbrookrobotics.workshops.donottouch.timing.EventLoop
 import info.kunalsheth.units.generated.Second
 import info.kunalsheth.units.generated.Time
 import info.kunalsheth.units.math.milli

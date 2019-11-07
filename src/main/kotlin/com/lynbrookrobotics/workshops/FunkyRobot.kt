@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.workshops
 
-import com.lynbrookrobotics.workshops.donottouch.EventLoop
-import com.lynbrookrobotics.workshops.donottouch.Subsystems
+import com.lynbrookrobotics.workshops.donottouch.timing.EventLoop
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Subsystems
 import com.lynbrookrobotics.workshops.donottouch.choreographies.block
 import com.lynbrookrobotics.workshops.donottouch.choreographies.runWhenever
 import edu.wpi.first.hal.HAL
