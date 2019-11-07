@@ -35,20 +35,6 @@ suspend fun runWhile(predicate: () -> Boolean, block: Block) = coroutineScope {
 }
 
 /**
- * Creates a new coroutine running blocks in parallel.
- * The coroutine ends when all blocks are complete.
- *
- * @param blocks list of functions to run in parallel.
- */
-//suspend fun runAll(vararg blocks: Block) = supervisorScope {
-//    blocks.forEach {
-//        launch {
-//            it()
-//        }
-//    }
-//}
-
-/**
  * Pauses the coroutine for some time.
  *
  * @param time period to delay for

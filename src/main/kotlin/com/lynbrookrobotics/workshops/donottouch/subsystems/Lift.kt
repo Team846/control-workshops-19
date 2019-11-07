@@ -1,11 +1,13 @@
-package com.lynbrookrobotics.workshops.donottouch.subsystems.lift
+package com.lynbrookrobotics.workshops.donottouch.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
-import com.lynbrookrobotics.workshops.donottouch.subsystems.Component
+import com.lynbrookrobotics.workshops.donottouch.Component
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import info.kunalsheth.units.generated.*
 
-class LiftComponent(hardware: LiftHardware) : Component<LiftComponent, LiftHardware, DutyCycle>(hardware) {
+class Lift : Component<Lift, DutyCycle>() {
+
+    private val hardware = LiftHardware()
 
     val position: Length
         get() {
@@ -16,11 +18,11 @@ class LiftComponent(hardware: LiftHardware) : Component<LiftComponent, LiftHardw
             return (perFeedbackQuantity / nativeFeedbackUnits * hardware.talon.getSelectedSensorPosition(0)) - LiftHardware.zeroOffset
         }
 
-    override val fallbackController: LiftComponent.() -> DutyCycle = {
+    override val fallbackController: Lift.() -> DutyCycle = {
         0.Percent
     }
 
-    override fun LiftHardware.output(value: DutyCycle) {
+    override fun output(value: DutyCycle) {
         SmartDashboard.putNumber("Position Real (Inches)", position.Inch)
         SmartDashboard.putNumber("Position Native", hardware.talon.getSelectedSensorPosition(0).toDouble())
         hardware.talon.set(ControlMode.PercentOutput, value.Each)

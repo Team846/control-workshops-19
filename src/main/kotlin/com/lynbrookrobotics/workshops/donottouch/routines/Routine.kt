@@ -1,7 +1,6 @@
 package com.lynbrookrobotics.workshops.donottouch.routines
 
-import com.lynbrookrobotics.workshops.donottouch.subsystems.Component
-import com.lynbrookrobotics.workshops.donottouch.subsystems.SubsystemHardware
+import com.lynbrookrobotics.workshops.donottouch.Component
 import kotlinx.coroutines.CancellableContinuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -18,15 +17,14 @@ import kotlin.coroutines.resumeWithException
  * @param H type of this subsystem's hardware
  * @param Output type of this subsystem's output
  */
-class Routine<C, H, Output> internal constructor(
+class Routine<C, Output> internal constructor(
         private val controller: C.() -> Output?,
         cont: CancellableContinuation<Unit>
 ) :
         CancellableContinuation<Unit> by cont,
         (C) -> Output
 
-        where C : Component<C, H, Output>,
-              H : SubsystemHardware<H, C> {
+        where C : Component<C, Output> {
 
     /**
      * Calculate the next subsystem output and manage this routine's lifecycle

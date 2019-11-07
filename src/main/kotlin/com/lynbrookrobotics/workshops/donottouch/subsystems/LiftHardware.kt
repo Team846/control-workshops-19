@@ -1,4 +1,4 @@
-package com.lynbrookrobotics.workshops.donottouch.subsystems.lift
+package com.lynbrookrobotics.workshops.donottouch.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlFrame
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
@@ -6,13 +6,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration
-import com.lynbrookrobotics.workshops.donottouch.subsystems.SubsystemHardware
 import info.kunalsheth.units.generated.*
 import info.kunalsheth.units.math.milli
 
-class LiftHardware : SubsystemHardware<LiftHardware, LiftComponent>() {
-
-    override val syncThreshold = 5.milli(Second)
+class LiftHardware {
 
     companion object {
         private const val ESC_CAN_ID = 40
@@ -21,6 +18,7 @@ class LiftHardware : SubsystemHardware<LiftHardware, LiftComponent>() {
         private const val INVERT_SENSOR = false
         private const val TIMEOUT = 2500
 
+        private val syncThreshold = 5.milli(Second)
 
         private val openloopRamp = 0.Second
         private val closedloopRamp = 0.Second

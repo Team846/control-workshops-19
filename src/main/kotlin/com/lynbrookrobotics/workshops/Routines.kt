@@ -8,11 +8,11 @@ import info.kunalsheth.units.generated.Inch
 import info.kunalsheth.units.generated.Length
 import info.kunalsheth.units.generated.Percent
 
-suspend fun LiftComponent.set(target: DutyCycle) = startRoutine {
+suspend fun LiftComponent.set(target: DutyCycle) = startRoutine("Lift Set") {
     controller { target }
 }
 
-suspend fun LiftComponent.set(target: Length) = startRoutine {
+suspend fun LiftComponent.set(target: Length) = startRoutine("Lift Set Position") {
 
     val kP = 10.0
 
@@ -21,10 +21,10 @@ suspend fun LiftComponent.set(target: Length) = startRoutine {
     }
 }
 
-suspend fun HookComponent.set(target: Boolean) = startRoutine {
+suspend fun HookComponent.set(target: Boolean) = startRoutine("Hook Set") {
     controller { target }
 }
 
-suspend fun SliderComponent.set(target: Boolean) = startRoutine {
+suspend fun SliderComponent.set(target: Boolean) = startRoutine("Hook Slider Set") {
     controller { target }
 }

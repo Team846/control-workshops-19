@@ -2,7 +2,6 @@ package com.lynbrookrobotics.workshops.donottouch
 
 import com.lynbrookrobotics.workshops.donottouch.ExecutionOrder.First
 import com.lynbrookrobotics.workshops.donottouch.ExecutionOrder.Last
-import com.lynbrookrobotics.workshops.donottouch.subsystems.blockingMutex
 
 enum class ExecutionOrder {
     First, Last

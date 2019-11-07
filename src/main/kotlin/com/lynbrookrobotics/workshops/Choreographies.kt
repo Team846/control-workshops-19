@@ -33,9 +33,11 @@ suspend fun Subsystems.panelCollect() = choreography("Panel Collect") {
     }
 
     onEnd {
-        launch { lift.set(panelCollectStrokeHeight) }
-        waitUntil {
-            abs(lift.position - panelCollectStrokeHeight) < 0.5.Inch
+        withTimeout(1.Second) {
+            launch { lift.set(panelCollectStrokeHeight) }
+            waitUntil {
+                abs(lift.position - panelCollectStrokeHeight) < 0.5.Inch
+            }
         }
         launch { slider.set(true) }
         delay(0.2.Second)

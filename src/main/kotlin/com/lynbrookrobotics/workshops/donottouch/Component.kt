@@ -1,4 +1,4 @@
-package com.lynbrookrobotics.workshops.donottouch.subsystems
+package com.lynbrookrobotics.workshops.donottouch
 
 import com.lynbrookrobotics.workshops.donottouch.routines.Routine
 import kotlinx.coroutines.CancellationException
@@ -18,14 +18,11 @@ inline fun <R> blockingMutex(lock: Any, block: () -> R) = synchronized(lock, blo
  * @see Ticker
  *
  * @param This type of child class
- * @param H type of this subsystem's hardware
  * @param Output type of this subsystem's output
  *
  * @param hardware this subsystem's hardware
  */
-abstract class Component<This, H, Output>(val hardware: H)
-        where This : Component<This, H, Output>,
-              H : SubsystemHardware<H, This> {
+abstract class Component<This, Output> where This : Component<This, Output> {
 
     @Suppress("UNCHECKED_CAST")
     private val thisAsThis = this as This
@@ -38,7 +35,7 @@ abstract class Component<This, H, Output>(val hardware: H)
     /**
      * actively running routine
      */
-    var routine: Routine<This, H, Output>? = null
+    var routine: Routine<This, Output>? = null
         private set(value) = blockingMutex(this) {
             field.takeUnless { it === value }?.cancel()
             field = value
@@ -54,21 +51,20 @@ abstract class Component<This, H, Output>(val hardware: H)
      * @param setup function returning a subsystem controller
      */
     suspend fun startRoutine(
+            name: String,
             setup: () -> This.() -> Output?
     ) {
-        var routine: Routine<This, H, Output>? = null
         try {
-            println("Starting")
+            println("Starting $name routine")
             val controller = setup()
             suspendCancellableCoroutine<Unit> { cont ->
                 Routine(controller, cont).also {
-                    routine = it
                     this.routine = it
                 }
             }
-            println("Completed")
+            println("Completed $name routine")
         } catch (c: CancellationException) {
-            println("Cancelled")
+            println("Cancelled $name routine")
             throw c
         }
     }
@@ -90,14 +86,14 @@ abstract class Component<This, H, Output>(val hardware: H)
      * @receiver this subsystem's hardware
      * @param value output to write
      */
-    protected abstract fun H.output(value: Output)
+    protected abstract fun output(value: Output)
 
     fun loop() {
         try {
             @Suppress("UNNECESSARY_SAFE_CALL")
             (routine ?: fallbackController)
                     ?.invoke(thisAsThis)
-                    ?.let { hardware?.output(it) }
+                    ?.let { output(it) }
         } catch (t: Throwable) {
             routine?.resumeWithException(t) ?: println(t)
         }
