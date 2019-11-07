@@ -1,23 +1,31 @@
 package com.lynbrookrobotics.workshops
 
+import com.lynbrookrobotics.workshops.donottouch.EventLoop
+import com.lynbrookrobotics.workshops.donottouch.Subsystems
+import com.lynbrookrobotics.workshops.donottouch.choreographies.block
+import com.lynbrookrobotics.workshops.donottouch.choreographies.runWhenever
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.RobotBase
+import kotlinx.coroutines.GlobalScope
 
-// BASE TEMPLATE
-fun main(args: Array<String>) = RobotBase.startRobot(::FunkyRobot)
+fun main() = RobotBase.startRobot(::FunkyRobot)
 
 class FunkyRobot : RobotBase() {
 
     override fun startCompetition() {
 
-        // write initialization code here!
+        val subsystems = Subsystems()
 
         HAL.observeUserProgramStarting()
 
+        GlobalScope.runWhenever(
+                { subsystems.joystick.getRawButton(1) } to block {
+                    subsystems.panelCollect()
+                }
+        )
+
         while (true) {
-
-            // write control code here!
-
+            EventLoop.tick()
             m_ds.waitForData()
         }
     }
