@@ -19,3 +19,17 @@ suspend fun Hook.set(target: Boolean) = startRoutine("Hook Set") {
 suspend fun Slider.set(target: Boolean) = startRoutine("Hook Slider Set") {
     controller { target }
 }
+
+// CHALLENGE #1/2/3
+suspend fun Lift.set(target: Length /* Extra parameters here */) = startRoutine("Lift Position Set") {
+
+    // Initialization code here (run only once) e.g. variables
+
+    controller {
+        // Control code here
+        // The last line of code in this "controller" block is the output you want to set (Percent)
+
+        0.Percent // Placeholder output
+    }
+
+}

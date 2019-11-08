@@ -7,7 +7,7 @@ import com.lynbrookrobotics.workshops.donottouch.subsystems.Subsystems
 import com.lynbrookrobotics.workshops.donottouch.timing.EventLoop
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.RobotBase
-import info.kunalsheth.units.generated.Percent
+import info.kunalsheth.units.generated.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -21,15 +21,11 @@ class FunkyRobot : RobotBase() {
 
         // Initialization code
 
-
+        GlobalScope.launch { subsystems.lift.set(30.Inch) }
 
         HAL.observeUserProgramStarting()
 
         while (true) {
-            // Control code
-
-
-
             m_ds.waitForData()
             EventLoop.tick()
         }

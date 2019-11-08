@@ -7,16 +7,20 @@ import info.kunalsheth.units.generated.Inch
 import info.kunalsheth.units.generated.Second
 import kotlinx.coroutines.launch
 
-suspend fun Subsystems.example() = choreography("Example") {
+// CHALLENGE #4
+private val panelCollectHeight = 12.Inch
+private val panelCollectStrokeHeight = 15.Inch
 
-    val hello = "Hello"
+suspend fun Subsystems.panelCollect() = choreography("Panel Collect") {
+
+    // Initialization code here (run only once) e.g. variables
 
     onStart {
-        print(hello)
+        // Called when the button is pressed
     }
 
     onEnd {
-        println(" world")
+        // Called once the button is released
     }
 
 }
