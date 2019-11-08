@@ -12,20 +12,6 @@ suspend fun Lift.set(target: DutyCycle) = startRoutine("Lift Set") {
     controller { target }
 }
 
-suspend fun Lift.set(target: Length, threshold: Length) = startRoutine("Lift Set Position") {
-
-    val dxdt = differentiator(::div, currentTime, position)
-
-    val kP = 100.Percent / 3.Inch
-    val kD = 50.Percent / 3.FootPerSecond
-
-    controller {
-        val error = target - position
-        val velocity = dxdt(currentTime, position)
-        (kP * error - kD * velocity).takeUnless { position in target `±` threshold }
-    }
-}
-
 suspend fun Hook.set(target: Boolean) = startRoutine("Hook Set") {
     controller { target }
 }

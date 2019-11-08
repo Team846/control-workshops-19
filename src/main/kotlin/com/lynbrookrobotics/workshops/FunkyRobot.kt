@@ -19,27 +19,17 @@ class FunkyRobot : RobotBase() {
 
         val subsystems = Subsystems()
 
-        GlobalScope.launch {
-            runWhenever(
-                    { subsystems.joystick.getRawButton(1) } to block {
-                        subsystems.panelCollect()
-                    },
-                    { subsystems.joystick.pov == 0 } to block {
-                        subsystems.lift.set(80.Percent)
-                    },
-                    { subsystems.joystick.pov == 180 } to block {
-                        subsystems.lift.set(-50.Percent)
-                    },
-                    { subsystems.joystick.pov == 0 } to block {
-                        subsystems.lift.set(-0.Percent)
-                    }
-            )
-            freeze()
-        }
+        // Initialization code
+
+
 
         HAL.observeUserProgramStarting()
 
         while (true) {
+            // Control code
+
+
+
             m_ds.waitForData()
             EventLoop.tick()
         }

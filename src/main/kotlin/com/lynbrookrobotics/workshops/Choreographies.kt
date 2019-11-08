@@ -7,23 +7,16 @@ import info.kunalsheth.units.generated.Inch
 import info.kunalsheth.units.generated.Second
 import kotlinx.coroutines.launch
 
-suspend fun Subsystems.panelCollect() = choreography("Panel Collect") {
+suspend fun Subsystems.example() = choreography("Example") {
 
-    val panelCollectHeight = 24.Inch
-    val panelCollectStrokeHeight = 30.Inch
+    val hello = "Hello"
 
     onStart {
-        launch { hook.set(true) }
-        lift.set(panelCollectHeight, 0.5.Inch)
+        print(hello)
     }
 
     onEnd {
-        launch { lift.set(panelCollectStrokeHeight, 0.5.Inch) }
-        delay(0.2.Second)
-        launch { slider.set(true) }
-        delay(0.2.Second)
-        launch { hook.set(false) }
-        delay(0.2.Second)
-        launch { slider.set(false) }
+        println(" world")
     }
+
 }
