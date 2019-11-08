@@ -7,7 +7,6 @@ import com.lynbrookrobotics.workshops.donottouch.subsystems.Subsystems
 import com.lynbrookrobotics.workshops.donottouch.timing.EventLoop
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.wpilibj.RobotBase
-import info.kunalsheth.units.generated.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -21,7 +20,18 @@ class FunkyRobot : RobotBase() {
 
         // Initialization code
 
-        GlobalScope.launch { subsystems.lift.set(30.Inch) }
+        // CHALLENGE #1/2/3
+//        GlobalScope.launch { subsystems.lift.set(30.Inch) }
+
+        // CHALLENGE #4
+//        GlobalScope.launch {
+//            runWhenever(
+//                    { subsystems.joystick.getRawButton(1) } to block {
+//                        subsystems.panelCollect()
+//                    }
+//            )
+//            freeze()
+//        }
 
         HAL.observeUserProgramStarting()
 
