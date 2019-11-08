@@ -1,9 +1,6 @@
 package com.lynbrookrobotics.workshops.donottouch.choreographies
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Make a new [Choreography] in a DSL-like manner.
@@ -11,7 +8,7 @@ import kotlinx.coroutines.withContext
  * @param name of the choreography.
  * @param setup choreography builder.
  */
-fun choreography(name: String, setup: Choreography.() -> Unit) = Choreography(name).apply(setup)
+suspend fun choreography(name: String, setup: Choreography.() -> Unit) = Choreography(name).apply(setup).invoke()
 
 /**
  * A sequence of routines from various subsystems.
@@ -27,8 +24,16 @@ class Choreography internal constructor(
     private var onStart: Block = block {}
     private var onEnd: Block? = null
 
-    fun onStart(block: Block) = block.let { onStart = it }
-    fun onEnd(block: Block) = block.let { onEnd = it }
+    fun onStart(block: Block) {
+        onStart = block
+    }
+
+    fun onEnd(block: Block) {
+        onEnd = block {
+            this.block()
+            this.cancel()
+        }
+    }
 
     /**
      * In a new [coroutineScope], run the [onStart] block, logging cancellation or other exceptions/errors.
@@ -40,19 +45,29 @@ class Choreography internal constructor(
         coroutineScope {
             try {
                 println("Started $name choreography start.")
-                onStart()
+                try {
+                    onStart()
+                } catch (c: CancellationException) {
+                    // Don't run onEnd block if onStart is cancelled
+                    throw c
+                }
+
+                try {
+                    freeze()
+                } finally {
+                    onEnd?.let {
+                        withContext(NonCancellable) {
+                            println("Started $name choreography end.")
+                            it()
+                            println("Completed $name choreography end.")
+                        }
+                    }
+                }
+
                 println("Completed $name choreography start.")
             } catch (c: CancellationException) {
                 println("Cancelled $name choreography start.\n${c.message}")
                 throw c
-            } finally {
-                onEnd?.let {
-                    withContext(NonCancellable) {
-                        println("Started $name choreography end.")
-                        it()
-                        println("Completed $name choreography end.")
-                    }
-                }
             }
         }
     }

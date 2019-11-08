@@ -18,6 +18,8 @@ class Lift : Component<Lift, DutyCycle>() {
             return (perFeedbackQuantity / nativeFeedbackUnits * hardware.talon.getSelectedSensorPosition(0)) - LiftHardware.zeroOffset
         }
 
+
+
     override val fallbackController: Lift.() -> DutyCycle = {
         0.Percent
     }

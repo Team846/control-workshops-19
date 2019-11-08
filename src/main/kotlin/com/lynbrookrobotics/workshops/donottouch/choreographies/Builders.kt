@@ -1,8 +1,8 @@
 package com.lynbrookrobotics.workshops.donottouch.choreographies
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import com.lynbrookrobotics.workshops.donottouch.timing.EventLoop
+import kotlinx.coroutines.*
+import kotlin.coroutines.resume
 
 /**
  * Runs a block whenever the predicate is met.
@@ -14,10 +14,28 @@ import kotlinx.coroutines.launch
  * @param predicate function to check if the block should be run.
  * @param block function to run.
  */
-fun CoroutineScope.whenever(predicate: () -> Boolean, block: Block) = launch {
-    while (isActive) {
-        waitUntil(predicate)
-        block()
+suspend fun whenever(predicate: () -> Boolean, block: Block) = coroutineScope {
+    var cont: CancellableContinuation<Unit>? = null
+
+
+    val runOnTick = EventLoop.runOnTick {
+        if (predicate() && cont?.isActive == true) {
+            try {
+                cont?.resume(Unit)
+            } catch (c: CancellationException) {
+                throw c
+            } catch (e: IllegalStateException) {
+            }
+        }
+    }
+
+    try {
+        while (isActive) {
+            suspendCancellableCoroutine<Unit> { cont = it }
+            block()
+        }
+    } finally {
+        runOnTick.cancel()
     }
 }
 
@@ -32,18 +50,14 @@ fun CoroutineScope.whenever(predicate: () -> Boolean, block: Block) = launch {
  *
  * @param blocks list of pairs of a predicate and a block.
  */
-fun CoroutineScope.runWhenever(vararg blocks: Pair<() -> Boolean, Block>) = launch {
+suspend fun runWhenever(vararg blocks: Pair<() -> Boolean, Block>) = supervisorScope {
     blocks.forEach { (p, b) ->
-        whenever(p) {
-            runWhile(p) {
-                try {
-                    b()
-                } catch (e: Exception) {
-                }
+        launch {
+            whenever(p) {
+                runWhile(p, b)
             }
         }
     }
-    freeze()
 }
 
 /**

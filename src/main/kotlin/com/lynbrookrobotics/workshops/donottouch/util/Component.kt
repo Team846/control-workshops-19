@@ -97,11 +97,5 @@ abstract class Component<This, Output> where This : Component<This, Output> {
             routine?.resumeWithException(t) ?: println(t)
         }
     }
-
-//    override fun equals(other: Any?) = when (other) {
-//        is Component<*, *, *> -> this.name == other.name
-//        else -> false
-//    }
-
-//    override fun hashCode() = name.hashCode()
+    
 }

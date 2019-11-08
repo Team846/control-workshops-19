@@ -1,23 +1,28 @@
 package com.lynbrookrobotics.workshops
 
+import com.lynbrookrobotics.workshops.donottouch.math.differentiator
 import com.lynbrookrobotics.workshops.donottouch.subsystems.Hook
 import com.lynbrookrobotics.workshops.donottouch.subsystems.Lift
 import com.lynbrookrobotics.workshops.donottouch.subsystems.Slider
-import info.kunalsheth.units.generated.DutyCycle
-import info.kunalsheth.units.generated.Inch
-import info.kunalsheth.units.generated.Length
-import info.kunalsheth.units.generated.Percent
+import com.lynbrookrobotics.workshops.donottouch.timing.currentTime
+import info.kunalsheth.units.generated.*
+import info.kunalsheth.units.math.`±`
 
 suspend fun Lift.set(target: DutyCycle) = startRoutine("Lift Set") {
     controller { target }
 }
 
-suspend fun Lift.set(target: Length) = startRoutine("Lift Set Position") {
+suspend fun Lift.set(target: Length, threshold: Length) = startRoutine("Lift Set Position") {
 
-    val kP = 10.0
+    val dxdt = differentiator(::div, currentTime, position)
+
+    val kP = 100.Percent / 3.Inch
+    val kD = 50.Percent / 3.FootPerSecond
 
     controller {
-        (kP * (target - position).Inch).Percent
+        val error = target - position
+        val velocity = dxdt(currentTime, position)
+        (kP * error - kD * velocity).takeUnless { position in target `±` threshold }
     }
 }
 
