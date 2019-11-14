@@ -5,16 +5,12 @@ import edu.wpi.first.wpilibj.Joystick
 
 class Subsystems {
 
-    val lift = Lift()
-    val hook = Hook()
-    val slider = Slider()
+    val leds = Leds()
     val joystick = Joystick(0)
 
     init {
         EventLoop.runOnTick {
-            lift.loop()
-            hook.loop()
-            slider.loop()
+            leds.loop()
         }
     }
 

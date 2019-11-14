@@ -12,14 +12,9 @@ inline fun <R> blockingMutex(lock: Any, block: () -> R) = synchronized(lock, blo
  * Intended for writing autonomous routines, running control loops, and outputting to hardware.
  *
  * @author Kunal
- * @see SubsystemHardware
- * @see pref
- * @see Ticker
  *
  * @param This type of child class
  * @param Output type of this subsystem's output
- *
- * @param hardware this subsystem's hardware
  */
 abstract class Component<This, Output> where This : Component<This, Output> {
 
