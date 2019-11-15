@@ -18,7 +18,20 @@ class FunkyRobot : RobotBase() {
 
         val subsystems = Subsystems()
 
-        GlobalScope.launch { subsystems.leds.fadeRed() }
+        // Initialization code
+
+        // CHALLENGE #1/2/3
+//        GlobalScope.launch { subsystems.lift.set(30.Inch) }
+
+        // CHALLENGE #4
+//        GlobalScope.launch {
+//            runWhenever(
+//                    { subsystems.joystick.getRawButton(1) } to block {
+//                        subsystems.panelCollect()
+//                    }
+//            )
+//            freeze()
+//        }
 
         HAL.observeUserProgramStarting()
 

@@ -1,30 +1,35 @@
 package com.lynbrookrobotics.workshops
 
-import com.lynbrookrobotics.workshops.donottouch.subsystems.Leds
+import com.lynbrookrobotics.workshops.donottouch.math.differentiator
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Hook
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Lift
+import com.lynbrookrobotics.workshops.donottouch.subsystems.Slider
 import com.lynbrookrobotics.workshops.donottouch.timing.currentTime
 import info.kunalsheth.units.generated.*
-import java.awt.Color
-import kotlin.math.abs
-import kotlin.math.sin
+import info.kunalsheth.units.math.`±`
 
-suspend fun Leds.set(target: Color) = startRoutine("Leds set") {
+suspend fun Lift.set(target: DutyCycle) = startRoutine("Lift Set") {
     controller { target }
 }
 
-suspend fun Leds.fadeRed() = startRoutine("Leds fade red") {
-
-    controller {
-        val red = abs(sin(currentTime.Second) * 255.0).toInt()
-        Color(red, 0, 0)
-    }
+suspend fun Hook.set(target: Boolean) = startRoutine("Hook Set") {
+    controller { target }
 }
 
-suspend fun Leds.rainbow() = startRoutine("Leds fade rainbow") {
+suspend fun Slider.set(target: Boolean) = startRoutine("Hook Slider Set") {
+    controller { target }
+}
+
+// CHALLENGE #1/2/3
+suspend fun Lift.set(target: Length /* Extra parameters here */) = startRoutine("Lift Position Set") {
+
+    // Initialization code here (run only once) e.g. variables
 
     controller {
-        val hue = (currentTime.Second % 255).toFloat()
+        // Control code here
+        // The last line of code in this "controller" block is the output you want to set (Percent)
 
-        Color.getHSBColor(hue, 1.0f, 1.0f)
+        0.Percent // Placeholder output
     }
 
 }
